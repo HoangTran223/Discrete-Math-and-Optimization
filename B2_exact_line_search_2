@@ -1,0 +1,41 @@
+import numpy as np
+# Ở đây ma trận A là ma trận Hess, đối xứng, dương, nên bài toán là hàm toàn phương lồi chặt, ta áp dụng công thức ở SGK trang 232 
+def f(x, y):
+    return x**2 + 25*y**2
+
+def gradient(x, y):
+    dfx = 2*x
+    dfy = 50*y
+    return [dfx, dfy]
+
+def exact_line_search(x, y, gradient):
+    step_size = np.dot(gradient, gradient) / np.dot(gradient, np.dot(hess, gradient))            
+    return step_size
+
+epsilon = 1e-6  
+count = 0
+x, y = 2, 1
+
+while True:
+    grad = gradient(x, y)
+    t = 1.0
+    hess = [[2, 0], 
+                [0, 50]]
+    t = exact_line_search(x,y, grad)
+    
+    next_x = x - t * grad[0]
+    next_y = y - t * grad[1]
+    next_grad = gradient(next_x, next_y)
+
+    if ( next_grad[0]**2 + next_grad[1]**2 ) < epsilon:
+        x, y = next_x, next_y
+        count += 1
+        break
+    else:
+        x, y = next_x, next_y
+        count += 1
+
+print("Desired solution:" ,(x, y))
+print("Value function with desired solution:", f(x, y))
+print("Gradient with function:", gradient(x,y) )
+print("Số lần lặp:", count)             # 11 lần lặp
